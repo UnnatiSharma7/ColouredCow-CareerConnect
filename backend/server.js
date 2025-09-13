@@ -33,6 +33,11 @@ app.get("/", (req, res) => {
   res.send("Hiring Dashboard Backend is running...");
 });
 
+app.get("/newPath", (req,res) => {
+  res.send("New testing path....");
+});
+
+
 // Start server
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
