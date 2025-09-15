@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Box,
@@ -21,6 +22,8 @@ function CandidateForm() {
     resume: ""
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
@@ -34,7 +37,8 @@ function CandidateForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData)
     });
-    alert("Application Submitted! Check your email.");
+    // instead of alert, navigate
+    navigate("/thank-you");
   };
 
   return (
