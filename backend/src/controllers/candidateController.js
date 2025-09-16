@@ -3,8 +3,13 @@ const sendEmail = require("../utils/sendEmail");
 
 const submitApplication = async (req, res) => {
   try {
-    console.log(req.body.email);
-    const newCandidate = new Candidate(req.body);
+    console.log(req.file.path);
+    // Combine form data (req.body) + resume URL (req.file.path)
+    const newCandidate = new Candidate({
+      ...req.body,          // all text fields (name, email, phone, etc.)
+      resume: req.file?.path // Cloudinary URL (if a file was uploaded)
+    });
+
     await newCandidate.save();
 
     // Send confirmation email

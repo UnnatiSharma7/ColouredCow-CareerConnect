@@ -19,39 +19,42 @@ function CandidateForm() {
     college: "",
     graduationYear: "",
     jobRole: "",
-    resume: ""
   });
+  const [resumeFile, setResumeFile] = useState(null);
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  //https://colouredcow-careerconnect.onrender.com
+
+  const handleFileChange = (e) => {
+    setResumeFile(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(process.env.REACT_APP_API_URL);
+
+    const data = new FormData();
+    Object.keys(formData).forEach((key) => {
+      data.append(key, formData[key]);
+    });
+
+    if (resumeFile) {
+      data.append("resume", resumeFile);
+    }
+
     await fetch(`${process.env.REACT_APP_API_URL}/api/candidates/apply`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData)
+      body: data, // don't set Content-Type; browser handles it
     });
-    // instead of alert, navigate
+
     navigate("/thank-you");
   };
 
   return (
     <Container maxWidth="md" sx={{ mt: 6, mb: 6 }}>
-      {/* Card-like container */}
-      <Paper
-        elevation={6}
-        sx={{
-          borderRadius: 4,
-          overflow: "hidden",
-        }}
-      >
-        {/* Header Section */}
+      <Paper elevation={6} sx={{ borderRadius: 4, overflow: "hidden" }}>
         <Box
           sx={{
             background: "linear-gradient(135deg, #3f51b5, #1e88e5)",
@@ -68,7 +71,6 @@ function CandidateForm() {
           </Typography>
         </Box>
 
-        {/* Form Section */}
         <Box sx={{ p: { xs: 3, sm: 5 } }}>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
@@ -145,15 +147,31 @@ function CandidateForm() {
                   )}
                 </TextField>
               </Grid>
+
+              {/* Resume Upload */}
               <Grid item xs={12}>
-                <TextField
+                <Button
+                  variant="contained"
+                  component="label"
                   fullWidth
-                  label="Resume (URL)"
-                  name="resume"
-                  value={formData.resume}
-                  onChange={handleChange}
-                />
+                  sx={{ py: 1.5, borderRadius: 3 }}
+                >
+                  Upload Resume (PDF)
+                  <input
+                    type="file"
+                    hidden
+                    name="resume"
+                    accept="application/pdf"
+                    onChange={handleFileChange}
+                  />
+                </Button>
+                {resumeFile && (
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    {resumeFile.name}
+                  </Typography>
+                )}
               </Grid>
+
               <Grid item xs={12}>
                 <Button
                   type="submit"
