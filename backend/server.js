@@ -3,7 +3,9 @@ const express= require("express");
 const mongoose =require("mongoose");
 const dotenv =require("dotenv");
 const cors=require("cors");
+const Candidate=require("./src/models/candidateModel");
 const candidateRoutes = require("./src/routes/candidateRoutes");
+const applicationsRoutes = require("./src/routes/applicationsRoutes");
 
 dotenv.config();
 
@@ -12,10 +14,6 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
-
-// Routes
-app.use("/api/candidates", candidateRoutes);
-
 
 // MongoDB Atlas Connection
 const connectDB = async () => {
@@ -33,13 +31,28 @@ const connectDB = async () => {
 
 connectDB();
 
-// Example Route
-app.get("/", (req, res) => {
-  res.send("Hiring Dashboard Backend is running...");
-});
+// Routes
+app.use("/api/candidates", candidateRoutes);
 
-app.get("/newPath", (req,res) => {
-  res.send("New testing path....");
+// Get the submitted applications of all the candidates
+app.use("/api/applications",applicationsRoutes);
+
+// PUT /applications/:id/status
+app.put("/application/:id/status", async (req, res) => {
+  try {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    const updated = await Candidate.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Start server
