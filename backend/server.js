@@ -1,11 +1,12 @@
 // server.js
-const express= require("express");
+const express =require("express");
 const mongoose =require("mongoose");
 const dotenv =require("dotenv");
 const cors=require("cors");
 const Candidate=require("./src/models/candidateModel");
 const candidateRoutes = require("./src/routes/candidateRoutes");
 const applicationsRoutes = require("./src/routes/applicationsRoutes");
+const sendEmail = require("./src/utils/sendEmail");
 
 dotenv.config();
 
@@ -49,8 +50,35 @@ app.put("/application/:id/status", async (req, res) => {
       { new: true }
     );
 
-    res.json(updated);
+    if (!updated) {
+      return res.status(404).json({ error: "Candidate not found" });
+    }
+
+    // Send email only for approved/rejected
+    if (status === "approved" || status === "rejected") {
+      let subject, message;
+
+      if (status === "approved") {
+        subject = "🎉 Congratulations! Your Application is Approved";
+        message = `Hello ${updated.name},\n\nYour application has been approved! Our HR team will contact you with the next steps.\n\nRegards,\nHR Team`;
+      } else {
+        subject = "Application Update - Rejected";
+        message = `Hello ${updated.name},\n\nThank you for applying. Unfortunately, your application has been rejected.\n\nBest wishes,\nHR Team`;
+      }
+
+      await sendEmail(updated.email, subject, message);
+
+      // 👇 send response for frontend toast
+      return res.json({
+        success: true,
+        message: `Email sent successfully to ${updated.email}`,
+        updated,
+      });
+    }
+
+    res.json({ success: true, message: "Status updated", updated });
   } catch (err) {
+    console.error("Error updating status:", err);
     res.status(500).json({ error: err.message });
   }
 });

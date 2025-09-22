@@ -3,6 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import Overview from "../components/Overview";
 import HrReports from "../components/HrReports";
 import ApplicationTracking from "../components/ApplicationTracking";
+import { ApplicationProvider } from "../context/ApplicationContext";
 
 export default function HRMetricsDashboard() {
   const [activeSection, setActiveSection] = useState("overview");
@@ -105,7 +106,9 @@ export default function HRMetricsDashboard() {
       </Box>
 
       {/* Main Content */}
+      <ApplicationProvider>
       <Box sx={{ flexGrow: 1, p: 3 }}>{renderContent()}</Box>
+      </ApplicationProvider>
     </Box>
   );
 }

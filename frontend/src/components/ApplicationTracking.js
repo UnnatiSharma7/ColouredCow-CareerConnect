@@ -1,4 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import { useApplicationContext } from "../context/ApplicationContext"  
+import "react-toastify/dist/ReactToastify.css";
 import {
   Box,
   Button,
@@ -23,11 +26,15 @@ const statusIcons = {
 };
 
 export default function ApplicationTracking() {
-  const [applications, setApplications] = useState([]);
+  const {applications, setApplications} = useApplicationContext();
   const [selectedAppId, setSelectedAppId] = useState(null);
   // const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  
+  // Now applications is always an array
+  console.log("Applications from context: ", applications);
 
     useEffect(() => {
     const fetchApplications = async () => {
@@ -80,32 +87,44 @@ export default function ApplicationTracking() {
   console.log("filtered applications: ",filteredApplications);
 
 // new updated status function
- const updateStatus = async (newStatus) => {
+const updateStatus = async (newStatus) => {
   if (selectedAppId === null) return;
 
   try {
     // call backend API
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/application/${selectedAppId}/status`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: newStatus }),
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/application/${selectedAppId}/status`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to update status");
+    }
+
+    // ✅ show toast
+    toast.success(data.message, {
+      position: "top-right",
+      autoClose: 3000,
     });
 
-    if (!res.ok) throw new Error("Failed to update in DB");
-
-    const updatedApp = await res.json();
-
-    // update frontend state
+    // ✅ update state with the actual updated object
     setApplications((prev) =>
-      prev.map((app) => (app._id === selectedAppId ? updatedApp : app))
+      prev.map((app) => (app._id === selectedAppId ? data.updated : app))
     );
   } catch (err) {
     console.error(err);
-    alert("Error updating status in database");
+    toast.error("Error updating status in database");
   }
 };
 
-  const selectedApp = applications.find((app) => app._id === selectedAppId);
+
+const selectedApp = applications.find((app) => app._id === selectedAppId);
 
   // Unique Job Roles
 const uniqueJobRoles = [
@@ -161,6 +180,7 @@ const uniqueGradYears = [
 
 
   return (
+    <>
     <Box sx={{ flexGrow: 1 }}>
       {/* Filters */}
       <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap" }}>
@@ -311,5 +331,7 @@ const uniqueGradYears = [
       </Box>
 
     </Box>
+    <ToastContainer /> 
+    </>
   );
 }

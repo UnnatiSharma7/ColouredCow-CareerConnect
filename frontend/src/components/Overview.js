@@ -9,9 +9,12 @@ import {
   Stack,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useApplicationContext } from "../context/ApplicationContext";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 export default function Overview() {
+   const { counts } = useApplicationContext();
+   const total = counts.approved + counts.rejected + counts.pending;
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Grid container spacing={4}>
@@ -118,13 +121,13 @@ export default function Overview() {
                     Applications
                   </Typography>
                   <Typography variant="body2" color="text.secondary" mb={0.8}>
-                    Total approved applications
+                    Total pending applications
                   </Typography>
                   <Typography variant="body2" color="text.secondary" mb={1}>
                     Last 30 days summary
                   </Typography>
                   <Typography variant="subtitle1" fontWeight="600" mb={1}>
-                    30 applications
+                    {counts.pending}
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Box sx={{ flexGrow: 1 }}>
@@ -145,7 +148,7 @@ export default function Overview() {
                       variant="caption"
                       sx={{ minWidth: 80, textAlign: "right" }}
                     >
-                      5 applications
+                      {counts.pending}
                     </Typography>
                   </Box>
                 </Box>
@@ -224,7 +227,7 @@ export default function Overview() {
                         fontWeight: "bold",
                       }}
                     >
-                      20
+                      {counts.approved}
                     </Box>
                   </Box>
 
@@ -264,7 +267,7 @@ export default function Overview() {
                         fontWeight: "bold",
                       }}
                     >
-                      30
+                      {counts.rejected}
                     </Box>
                   </Box>
                 </Stack>
@@ -303,9 +306,9 @@ export default function Overview() {
                 />
               </Box>
               <Typography variant="subtitle1" fontWeight="bold">
-                Total Job Postings{" "}
+                Total Job Postings{total}
                 <Typography component="span" color="text.secondary" fontWeight="normal">
-                  (Pending Action: 5)
+                  (Pending Action: {counts.pending})
                 </Typography>
               </Typography>
               <Box sx={{ width: "100%", mt: 1, height: 220}}>
