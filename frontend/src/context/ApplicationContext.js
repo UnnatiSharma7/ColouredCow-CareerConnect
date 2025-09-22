@@ -19,10 +19,11 @@ export const ApplicationProvider = ({ children }) => {
   useEffect(() => {
     const approved = applications.filter((a) => a.status === "approved").length;
     const rejected = applications.filter((a) => a.status === "rejected").length;
-    const pending = applications.filter((a) => a.status === "pending").length;
+    const pending = applications.filter((a) => a.status === "Pending").length;
 
     setCounts({ approved, rejected, pending });
   }, [applications]);
+  console.log("pending applications: ",counts.pending)
 
   return (
     <ApplicationContext.Provider value={{ applications, setApplications, counts }}>

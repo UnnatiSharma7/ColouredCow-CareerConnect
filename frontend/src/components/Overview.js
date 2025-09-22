@@ -15,6 +15,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 export default function Overview() {
    const { counts } = useApplicationContext();
    const total = counts.approved + counts.rejected + counts.pending;
+   console.log("total count is: ",total);
+   console.log("pending applications are: ",counts.pending);
+   const postings = 0;
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Grid container spacing={4}>
@@ -56,31 +59,17 @@ export default function Overview() {
                     Current job listings count
                   </Typography>
                   <Typography variant="subtitle1" fontWeight="600" mb={0.5}>
-                    50 postings active
+                    {postings} postings active
                   </Typography>
                   <Typography variant="body2" color="text.secondary" mb={1}>
                     Applications this month
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={(15 / 50) * 100}
-                        sx={{
-                          height: 8,
-                          borderRadius: 4,
-                          bgcolor: "#f0f0f0",
-                          "& .MuiLinearProgress-bar": {
-                            bgcolor: "#42a5f5",
-                          },
-                        }}
-                      />
-                    </Box>
                     <Typography
                       variant="caption"
                       sx={{ minWidth: 80, textAlign: "right" }}
                     >
-                      15 applications
+                     {total} applications
                     </Typography>
                   </Box>
                 </Box>
@@ -127,13 +116,13 @@ export default function Overview() {
                     Last 30 days summary
                   </Typography>
                   <Typography variant="subtitle1" fontWeight="600" mb={1}>
-                    {counts.pending}
+                    {counts.total}
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Box sx={{ flexGrow: 1 }}>
                       <LinearProgress
                         variant="determinate"
-                        value={(5 / 30) * 100}
+                        value={(counts.pending / total) * 100}
                         sx={{
                           height: 8,
                           borderRadius: 4,
@@ -295,7 +284,7 @@ export default function Overview() {
               gap: 3,
             }}
 
-            >
+            > 
               <Box
                 sx={{ width: 120, height: 120, overflow: "hidden", borderRadius: 3 }}
               >
@@ -306,9 +295,9 @@ export default function Overview() {
                 />
               </Box>
               <Typography variant="subtitle1" fontWeight="bold">
-                Total Job Postings{total}
+                Total Job Postings {total}
                 <Typography component="span" color="text.secondary" fontWeight="normal">
-                  (Pending Action: {counts.pending})
+                    (Pending Action: {counts.pending})
                 </Typography>
               </Typography>
               <Box sx={{ width: "100%", mt: 1, height: 220}}>
@@ -316,16 +305,22 @@ export default function Overview() {
                   Applications Last 30 Days:
                 </Typography>
                 <Typography variant="body1" fontWeight="bold" sx={{ mb: 1 }}>
-                  200
+                  {total}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Approved:
                 </Typography>
                 <Typography variant="body1" fontWeight="bold">
-                  150
+                  {counts.approved}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Rejected:
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  {counts.rejected}
                 </Typography>
               </Box>
-            </Paper>
+             </Paper>
           </Box>
         </Grid>
       </Grid>
