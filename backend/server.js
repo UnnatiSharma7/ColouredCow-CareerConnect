@@ -6,7 +6,9 @@ const cors=require("cors");
 const Candidate=require("./src/models/candidateModel");
 const candidateRoutes = require("./src/routes/candidateRoutes");
 const applicationsRoutes = require("./src/routes/applicationsRoutes");
+const authRoutes = require("./src/routes/authRoutes");
 const sendEmail = require("./src/utils/sendEmail");
+const auth = require("./src/middlewares/auth");
 
 dotenv.config();
 
@@ -36,7 +38,10 @@ connectDB();
 app.use("/api/candidates", candidateRoutes);
 
 // Get the submitted applications of all the candidates
-app.use("/api/applications",applicationsRoutes);
+app.use("/api/applications",auth,applicationsRoutes);
+
+// Public routes
+app.use("/", authRoutes);
 
 // PUT /applications/:id/status
 app.put("/application/:id/status", async (req, res) => {

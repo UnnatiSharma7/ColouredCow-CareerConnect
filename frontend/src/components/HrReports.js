@@ -1,6 +1,14 @@
 import React, { useMemo } from "react";
 import { useApplicationContext } from "../context/ApplicationContext";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+import {
+  Box,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  LinearProgress,
+} from "@mui/material";
 
 const jobPostings = [
   "Software Engineer",
@@ -48,32 +56,80 @@ const HrReports = () => {
   }, [applications]);
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-">Reports</h2>
-      <div className="mb-6">
-        <h3 className="text-lg">
-          Average Time to Process Applications:
-        </h3>
-        <p>{avgTime} days</p>
-      </div>
+  <Container maxWidth="80%" sx={{ py: 4 }}>
+  <Typography
+    variant="h4"
+    sx={{ mb: 3, fontWeight: "bold", color: "#544f4fff" }}
+  >
+    Reports
+  </Typography>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Job Designation Trend</h3>
-        <div style={{ marginTop: "50px" }}>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart 
-          data={jobData}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="jobRole" />
-            <YAxis allowDecimals={false} />
-            <Tooltip />
-            <Bar dataKey="applications" fill="#82cb9fcf" />
-          </BarChart>
-        </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
+  <Paper
+    elevation={0} // no shadow
+    sx={{
+      p: 3,
+      mb: 4,
+      bgcolor: "rgba(243, 249, 244, 0.61)",
+      borderRadius: 2,
+      border: "1px solid rgba(80, 126, 58, 0.3)", // thin border line
+    }}
+  >
+    <Typography
+      variant="h6"
+      sx={{
+        mb: 1,
+        fontWeight: "normal",
+        fontSize: "1.125rem",
+        color: "#555",
+      }}
+    >
+      Average Time to Process the Applications: {avgTime}
+    </Typography>
+  </Paper>
+
+  <Paper
+    elevation={0} // no shadow
+    sx={{
+      p: 3,
+      bgcolor: "rgba(243, 249, 244, 0.61)",
+      borderRadius: 3,
+      minHeight: 400,
+      border: "1px solid rgba(80, 126, 58, 0.3)", // thin border line
+    }}
+  >
+    <ResponsiveContainer width="100%" height={350}>
+      <BarChart
+        data={jobData}
+        margin={{ top: 10, right: 30, left: 0, bottom: 30 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis
+          dataKey="jobRole"
+          angle={-45}
+          textAnchor="end"
+          interval={0}
+          height={70}
+          tick={{ fontSize: 12, fill: "#4b5563" }}
+        />
+        <YAxis
+          allowDecimals={false}
+          tick={{ fontSize: 12, fill: "#4b5563" }}
+        />
+        <Tooltip
+          contentStyle={{ backgroundColor: "#f9fafb", borderRadius: 8 }}
+          cursor={{ fill: "rgba(130, 203, 159, 0.2)" }}
+        />
+        <Bar
+          dataKey="applications"
+          fill="#82cb9f"
+          radius={[6, 6, 0, 0]}
+          barSize={32}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  </Paper>
+     </Container>
+
   );
 };
 

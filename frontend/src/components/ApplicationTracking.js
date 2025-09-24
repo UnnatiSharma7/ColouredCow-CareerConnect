@@ -25,6 +25,14 @@ const statusIcons = {
   rejected: <Cancel sx={{ color: "#f27777" }} />,
 };
 
+const cardStyle = {
+  bgcolor: "rgba(243, 249, 244, 0.61)", // soft green-ish bg
+  border: "1px solid rgba(80, 126, 58, 0.3)", // green border
+  borderRadius: 3, // consistent rounded corners
+  boxShadow: "none", // optional: removes Paper’s shadow
+};
+
+
 export default function ApplicationTracking() {
   const {applications, setApplications} = useApplicationContext();
   const [selectedAppId, setSelectedAppId] = useState(null);
@@ -37,26 +45,35 @@ export default function ApplicationTracking() {
   console.log("Applications from context: ", applications);
 
     useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/applications`); // backend endpoint
-        if (!res.ok) {
-          throw new Error("Failed to fetch applications");
-        }
-        const data = await res.json();
-        console.log(data);
-        setApplications(data); 
-        // console.log("applications data: ",applications);
-        // update state with fetched applications
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchApplications = async () => {
+    try {
+      const token = localStorage.getItem("token"); // get token from localStorage
+      if(token)console.log("token stored in the local storage is: ",token);
+      else console.log("No token is there in the local storage");
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/applications`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // attach token here
+        },
+      });
 
-    fetchApplications();
-  }, []);
+      if (!res.ok) {
+        throw new Error("Failed to fetch applications");
+      }
+
+      const data = await res.json();
+      console.log(data);
+      setApplications(data); 
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchApplications();
+}, []);
+
 
   const [filters, setFilters] = useState({
     jobRole: "",
@@ -132,7 +149,7 @@ const uniqueJobRoles = [
     applications
       .map((a) => {
         if (a?.jobRole) return a.jobRole;
-        if (a?.jobRole) return a.jobRole; // fallback
+        if (a?.jobRole) return a.jobRole; 
         return null;
       })
       .filter(Boolean)
@@ -184,7 +201,7 @@ const uniqueGradYears = [
     <Box sx={{ flexGrow: 1 }}>
       {/* Filters */}
       <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap" }}>
-        <FormControl size="small" sx={{ minWidth: 150 }}>
+        <FormControl size="small" sx={{ ...cardStyle,minWidth: 150 }}>
           <InputLabel>Filter by Job</InputLabel>
           <Select
             value={filters.jobRole}
@@ -200,7 +217,7 @@ const uniqueGradYears = [
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ minWidth: 150 }}>
+        <FormControl size="small" sx={{ ...cardStyle,minWidth: 150 }}>
           <InputLabel>Filter by City</InputLabel>
           <Select
             value={filters.city}
@@ -216,7 +233,7 @@ const uniqueGradYears = [
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ minWidth: 200 }}>
+        <FormControl size="small" sx={{ ...cardStyle,minWidth: 200 }}>
           <InputLabel>Filter by College</InputLabel>
           <Select
             value={filters.college}
@@ -232,7 +249,7 @@ const uniqueGradYears = [
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ minWidth: 150 }}>
+        <FormControl size="small" sx={{ ...cardStyle,minWidth: 150 }}>
           <InputLabel>Filter by Grad Year</InputLabel>
           <Select
             value={filters.graduationYear}
@@ -250,85 +267,88 @@ const uniqueGradYears = [
       </Box>
 
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", height: "calc(100vh - 100px)" }}>
-        {/* Application List */}
-        <Paper 
-        sx={{
+  {/* Application List */}
+  <Paper 
+    sx={{
+      flex: 1,
+      p: 2,
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+    }}
+  >
+    <Typography variant="h6" sx={{ mb: 1 }}>Recent Applications</Typography>
+    <List
+      sx={{
         flex: 1,
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden"
-        }}>
-          <Typography variant="h6" sx={{ mb: 1 }}>Recent Applications</Typography>
-          <List
-          sx={{
-          flex: 1,
-          overflowY: "auto",
-          // hide scrollbar
-          scrollbarWidth: "none", // Firefox
-          "&::-webkit-scrollbar": { display: "none" }, // Chrome, Safari
-        }}>
-            {filteredApplications.map((app) => (
-              <ListItem
-                key={app._id}
-                button
-                selected={selectedAppId === app._id}
-                onClick={() => setSelectedAppId(app._id)}
-              >
-                <ListItemText primary={`Application ID: ${app._id ? app._id.slice(-4) : "N/A"}`} />
-                {statusIcons[app.status?.toLowerCase()]}
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
+        overflowY: "auto",
+        scrollbarWidth: "none", 
+        "&::-webkit-scrollbar": { display: "none" },
+      }}
+    >
+      {filteredApplications.map((app) => (
+        <ListItem
+          key={app._id}
+          button
+          selected={selectedAppId === app._id}
+          onClick={() => setSelectedAppId(app._id)}
+        >
+          <ListItemText primary={`Application ID: ${app._id ? app._id.slice(-4) : "N/A"}`} />
+          {statusIcons[app.status?.toLowerCase()]}
+        </ListItem>
+      ))}
+    </List>
+  </Paper>
 
-        {/* Application Overview */}
-        <Paper sx={{
-        flex: 2,
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
-        }}>
-          <Typography variant="h6">Application Overview</Typography>
-          {selectedApp ? (
-            <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2}}>
-              <TextField label="Full Name" value={selectedApp.name} inputProps={{ readOnly: true }} />
-              <TextField label="Email" value={selectedApp.email} inputProps={{ readOnly: true }} />
-              <TextField label="City" value={selectedApp.city} inputProps={{ readOnly: true }} />
-              <TextField label="College" value={selectedApp.college} inputProps={{ readOnly: true }} />
-              <TextField label="Grad Year" value={selectedApp.graduationYear} inputProps={{ readOnly: true }} />
-              <TextField label="Job Role" value={selectedApp.jobRole} inputProps={{ readOnly: true }} />
+  {/* Application Overview */}
+  <Paper 
+    sx={{
+      flex: 2,
+      p: 2,
+      display: "flex",
+      flexDirection: "column",
+    }}
+  >
+    <Typography variant="h6">Application Overview</Typography>
+    {selectedApp ? (
+      <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        <TextField label="Full Name" value={selectedApp.name} inputProps={{ readOnly: true }} />
+        <TextField label="Email" value={selectedApp.email} inputProps={{ readOnly: true }} />
+        <TextField label="City" value={selectedApp.city} inputProps={{ readOnly: true }} />
+        <TextField label="College" value={selectedApp.college} inputProps={{ readOnly: true }} />
+        <TextField label="Grad Year" value={selectedApp.graduationYear} inputProps={{ readOnly: true }} />
+        <TextField label="Job Role" value={selectedApp.jobRole} inputProps={{ readOnly: true }} />
 
-              <Box sx={{ display: "flex", gap: 2, opacity: 0.8, mt: "auto"}}>
-                <Button variant="contained" color="success" onClick={() => updateStatus("approved")} sx={{ flex: 1 }}>
-                  Approve
-                </Button>
-                <Button variant="contained" color="error" onClick={() => updateStatus("rejected")} sx={{ flex: 1 }}>
-                  Reject
-                </Button>
-                <Button 
-                variant="outlined" 
-                sx={{ flex: 1 }}
-                onClick={() => {
-                if (selectedApp?.resume) {
+        <Box sx={{ display: "flex", gap: 2, opacity: 0.8, mt: "auto" }}>
+          <Button variant="contained" color="success" onClick={() => updateStatus("approved")} sx={{ flex: 1 }}>
+            Approve
+          </Button>
+          <Button variant="contained" color="error" onClick={() => updateStatus("rejected")} sx={{ flex: 1 }}>
+            Reject
+          </Button>
+          <Button 
+            variant="outlined" 
+            sx={{ flex: 1 }}
+            onClick={() => {
+              if (selectedApp?.resume) {
                 window.open(selectedApp.resume, "_blank", "noopener,noreferrer");
-                } else {
+              } else {
                 alert("No resume uploaded");
-                 }
-                 }}
-                >
-          View Resume
-        </Button>
-
-              </Box>
-            </Box>
-          ) : (
-            <Typography sx={{ mt: 2, fontStyle: "italic" }}>
-              Select an application to view details
-            </Typography>
-          )}
-        </Paper>
+              }
+            }}
+          >
+            View Resume
+          </Button>
+        </Box>
       </Box>
+    ) : (
+      <Typography sx={{ mt: 2, fontStyle: "italic" }}>
+        Select an application to view details
+      </Typography>
+    )}
+  </Paper>
+</Box>
+
 
     </Box>
     <ToastContainer /> 

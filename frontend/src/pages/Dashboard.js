@@ -4,6 +4,7 @@ import Overview from "../components/Overview";
 import HrReports from "../components/HrReports";
 import ApplicationTracking from "../components/ApplicationTracking";
 import { ApplicationProvider } from "../context/ApplicationContext";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export default function HRMetricsDashboard() {
   const [activeSection, setActiveSection] = useState("overview");
@@ -20,6 +21,18 @@ export default function HRMetricsDashboard() {
         return <Overview />;
     }
   };
+
+    // logout handler
+    const handleLogout = () => {
+    // Remove token from localStorage
+    localStorage.removeItem("token");
+
+    // (Optional) Clear other stored data if needed
+    // localStorage.clear();
+
+    // Redirect to login page
+    window.location.href = "/hr"; 
+    };
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f8f9fa" }}>
@@ -103,12 +116,32 @@ export default function HRMetricsDashboard() {
      HR Reports
     </Button>
 
+     {/* Logout Button at Bottom */}
+    <Box sx={{flexGrow:1 }}></Box>
+    <Button
+    variant="contained"
+    startIcon={<LogoutIcon />}
+    onClick={handleLogout} // <-- your logout logic here
+    sx={{
+      borderColor: "#a8d5ba",
+      bgcolor: "#a8d5ba" ,
+     "&:hover": {
+      bgcolor: "#90c9a7",
+      borderColor: "#90c9a7",
+    },
+      }}
+    >
+    Logout
+    </Button>
+    
+
       </Box>
 
       {/* Main Content */}
       <ApplicationProvider>
       <Box sx={{ flexGrow: 1, p: 3 }}>{renderContent()}</Box>
       </ApplicationProvider>
+
     </Box>
   );
 }
