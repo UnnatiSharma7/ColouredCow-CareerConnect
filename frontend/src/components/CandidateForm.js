@@ -53,18 +53,25 @@ function CandidateForm() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 6, mb: 6 }}>
+    <Container maxWidth="md" sx={{ mt: 20, mb: 6 }}>
       <Paper elevation={6} sx={{ borderRadius: 4, overflow: "hidden" }}>
         <Box
           sx={{
-            background: "linear-gradient(135deg, #3f51b5, #1e88e5)",
-            color: "white",
-            textAlign: "center",
-            py: 4,
-          }}
+          color: "white",
+          textAlign: "center",
+          py: 4,
+          background: "linear-gradient(135deg, #75be81, #3a810b, #75be81, #3a810b)",
+          backgroundSize: "400% 400%",
+          animation: "gradientFlow 15s ease infinite",
+          "@keyframes gradientFlow": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+          },
+        }}
         >
           <Typography variant="h4" fontWeight="bold">
-            Candidate Application Form
+            ColouredCow Application Form
           </Typography>
           <Typography variant="subtitle1" sx={{ mt: 1 }}>
             Fill out the details below to apply
@@ -149,29 +156,45 @@ function CandidateForm() {
               </Grid>
 
               {/* Resume Upload */}
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  component="label"
-                  fullWidth
-                  sx={{ py: 1.5, borderRadius: 3 }}
-                >
-                  Upload Resume (PDF)
-                  <input
-                    type="file"
-                    hidden
-                    name="resume"
-                    accept="application/pdf"
-                    onChange={handleFileChange}
-                  />
-                </Button>
-                {resumeFile && (
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    {resumeFile.name}
-                  </Typography>
-                )}
-              </Grid>
+              <Grid 
+              item 
+              xs={12} 
+              sx={{ 
+              background: "linear-gradient(135deg, #75be81ff, #3a810bae)", 
+              borderRadius: 3, 
+              p: 0.5  // optional: padding around the button to see gradient outside 
+             }}
+            >
+        <Button
+        variant="contained"
+        component="label"
+        fullWidth
+        sx={{ 
+        py: 1.5, 
+        borderRadius: 0, 
+        background: "linear-gradient(135deg, #75be81ff, #3a810bae)", 
+        boxShadow: "none", // remove default MUI shadow
+        "&:hover": {
+        background: "linear-gradient(135deg, #3a810bae, #75be81ff)", // reverse on hover
+        }
+        }}
+      >
+        Upload Resume (PDF)
+      <input
+      type="file"
+      hidden
+      name="resume"
+      accept="application/pdf"
+      onChange={handleFileChange}
+      />
+      </Button>
 
+          {resumeFile && (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+          {resumeFile.name}
+          </Typography>
+          )}
+      </Grid>
               <Grid item xs={12}>
                 <Button
                   type="submit"
@@ -179,17 +202,18 @@ function CandidateForm() {
                   size="large"
                   fullWidth
                   sx={{
-                    background: "linear-gradient(135deg, #1e88e5, #42a5f5)",
                     color: "white",
                     fontWeight: "bold",
                     py: 1.5,
                     borderRadius: 3,
-                    transition: "0.3s",
-                    "&:hover": {
-                      background: "linear-gradient(135deg, #1565c0, #1e88e5)",
-                      transform: "translateY(-2px)",
-                      boxShadow: 4,
-                    },
+                    background: "linear-gradient(135deg, #75be81, #3a810b, #75be81, #3a810b)",
+                    backgroundSize: "400% 400%",
+                    animation: "gradientFlow 15s ease infinite",
+                    "@keyframes gradientFlow": {
+                    "0%": { backgroundPosition: "0% 50%" },
+                    "50%": { backgroundPosition: "100% 50%" },
+                    "100%": { backgroundPosition: "0% 50%" },
+                 },
                   }}
                 >
                   Submit Application
