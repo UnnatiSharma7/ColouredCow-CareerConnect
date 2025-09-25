@@ -16,11 +16,13 @@ const jobPostings = [
   "Backend Developer",
   "Data Analyst",
   "UI/UX Designer",
-  "HR Associate"
+  "HR Associate",
+  "Fullstack",
 ];
 
 const HrReports = () => {
   const { applications } = useApplicationContext();
+  console.log("Applications in HrReports:", applications);
 
   // 1. Average time taken for action (approval/rejection)
   const avgTime = useMemo(() => {
@@ -114,6 +116,12 @@ const HrReports = () => {
         <YAxis
           allowDecimals={false}
           tick={{ fontSize: 12, fill: "#4b5563" }}
+          label={{
+          value: "Applications Number",
+          angle: -90,
+          position: "insideLeft",
+          style: { textAnchor: "middle", fill: "#4b5563", fontSize: 12 },
+          }}
         />
         <Tooltip
           contentStyle={{ backgroundColor: "#f9fafb", borderRadius: 8 }}
