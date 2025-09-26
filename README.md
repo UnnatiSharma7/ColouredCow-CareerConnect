@@ -18,15 +18,17 @@ A full-stack HR management solution built with the **MERN stack** to streamline 
 
 ## 📸 Screenshots
 
-- Candidate Application Form  
-- Resume Upload Section  
-- HR Dashboard – Candidate List  
+- Candidate Application Form
+  <img width="2524" height="1186" alt="image" src="https://github.com/user-attachments/assets/c24f857a-08b4-4357-be15-4fc878ab38d5" />
 
-> Make sure you create a `screenshots/` folder inside your repo and save the PNG/JPG files there.  
-> Example usage in Markdown:  
-> ```markdown
-> ![Candidate Form](./screenshots/candidate-form.png)
-> ![HR Dashboard](./screenshots/hr-dashboard.png)
+- Application Overview Section
+  <img width="2511" height="1207" alt="image" src="https://github.com/user-attachments/assets/0c9c8210-ab98-433b-a43b-596af7dfe603" />
+
+- HR Dashboard – Applications List
+  <img width="2505" height="1215" alt="image" src="https://github.com/user-attachments/assets/7f1fe75f-500f-4f84-b046-c2b8e3220a49" />
+
+- HR Reports
+  <img width="2519" height="1193" alt="image" src="https://github.com/user-attachments/assets/2439dabc-a65b-45e7-98a7-16dce5b1b8a8" />
 > ```
 
 ---
@@ -47,10 +49,17 @@ A full-stack HR management solution built with the **MERN stack** to streamline 
 ### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/UnnatiSharma7/ColouredCow-CareerConnect.git
-cd ColouredCow-CareerConnect 
+cd ColouredCow-CareerConnect
+```
+---
+## 🔹 Backend Setup
+```bash
+cd backend
+npm install 
+```
 
-Create a .env file inside backend/ and add the following:
-
+## 🔹 Create a .env file inside backend/ and add the following:
+```
 PORT=3000
 MONGO_URI=your_mongo_connection_string
 
@@ -62,27 +71,35 @@ CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 JWT_SECRET=your_jwt_secret_key
+```
+---
 
-
-Run the backend server:
-
+## 🔹 Run the backend server:
+```
 npm start
+```
+---
 
-🔹 Frontend Setup
+## 🔹 Frontend Setup
+```
 cd frontend
 npm install
+```
+---
 
-
-Create a .env file inside frontend/ and add:
-
+## 🔹 Create a .env file inside frontend/ and add.
+```
 REACT_APP_API_URL=http://localhost:3000
+```
+---
 
-
-Run the frontend:
-
+## 🔹 Run the frontend.
+```
 npm start
-
-📂 Project Structure
+```
+---
+## 📂 Project Structure
+```
 ColouredCow-CareerConnect/
 │
 ├── backend/
@@ -118,16 +135,16 @@ ColouredCow-CareerConnect/
 │ ├── package.json # Frontend dependencies & scripts
 │ ├── package-lock.json
 │ └── .gitignore
+```
+---
 
-📸 Future Enhancements
+## 📸 Future Enhancements
+• 📊 Visual dashboards for HR insights  
+• 🔎 Advanced candidate filtering (skills, experience, etc.)  
+• 🤝 Multi-HR collaboration with roles & permissions.
 
-📊 Visual dashboards for HR insights
+---
 
-🔎 Advanced candidate filtering (skills, experience, etc.)
-
-🤝 Multi-HR collaboration with roles & permissions
-
-👩‍💻 Author
-
-Developed by Unnati Sharma for ColoredCow HR Problem Statement.
+## 👩‍💻 Author
+• Developed by Unnati Sharma for ColoredCow HR Problem Statement.
 
