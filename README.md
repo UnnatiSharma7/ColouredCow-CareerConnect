@@ -98,45 +98,6 @@ REACT_APP_API_URL=http://localhost:3000
 npm start
 ```
 ---
-## 📂 Project Structure
-```
-ColouredCow-CareerConnect/
-│
-├── backend/
-│ ├── src/
-│ │ ├── config/ # Configuration files (e.g., DB connection, cloud services)
-│ │ ├── controllers/ # API controllers
-│ │ ├── middlewares/ # Authentication, validation & upload middlewares
-│ │ ├── models/ # MongoDB schemas
-│ │ ├── routes/ # Express routes
-│ │ └── utils/ # Utility/helper functions
-│ │
-│ ├── .env # Environment variables (not committed)
-│ ├── package.json # Backend dependencies & scripts
-│ ├── package-lock.json
-│ └── server.js # Entry point
-│
-├── frontend/
-│ ├── public/ # Static assets
-│ ├── src/
-│ │ ├── components/ # Reusable React components
-│ │ ├── context/ # Context API for state management
-│ │ ├── pages/ # Application pages (Dashboard, Forms, etc.)
-│ │ ├── App.css
-│ │ ├── App.js
-│ │ ├── App.test.js
-│ │ ├── index.css
-│ │ ├── index.js
-│ │ ├── logo.svg
-│ │ ├── reportWebVitals.js
-│ │ └── setupTests.js
-│ │
-│ ├── .env # Frontend environment variables
-│ ├── package.json # Frontend dependencies & scripts
-│ ├── package-lock.json
-│ └── .gitignore
-```
----
 
 ## 📸 Future Enhancements
 • 📊 Visual dashboards for HR insights  
